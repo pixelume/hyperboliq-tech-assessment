@@ -4,17 +4,26 @@ import ListGroup from 'react-bootstrap/ListGroup';
 import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import imagePlaceHolder from '../images/movie_poster_placeholder.29ca1c87.svg';
 import { AppContext } from '../App';
+import { useStoreState } from 'easy-peasy';
 
 const CardView = ({ setShowDetails }) => {
-  const { data } = useContext(AppContext);
-  const sortedArray = data.Search;
+  const { data, showFavs } = useContext(AppContext);
+  
+  const favourites = useStoreState(state => state.favourites)
+  let sortedArray = [];
+  if (showFavs) {
+    sortedArray = favourites
+  } else {
+    sortedArray = data.Search
+  }
+
   return (
     <>
       {sortedArray.map((movie, index) => (
         <Card
           key={movie.imdbID}
           as='button'
-          onClick={() => setShowDetails(movie.imdbID)}
+          onClick={() => setShowDetails(movie)}
           className='m-2'
           style={{
             display: 'block',

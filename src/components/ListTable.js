@@ -3,13 +3,22 @@ import Table from 'react-bootstrap/Table';
 import styled from 'styled-components';
 import imagePlaceHolder from '../images/movie_poster_placeholder.29ca1c87.svg';
 import { AppContext } from '../App';
+import { useStoreState } from 'easy-peasy';
 
-const Td = styled.td`
+export const Td = styled.td`
   vertical-align: middle;
 `;
 const ListTable = ({ headings, setShowDetails }) => {
-  const { data } = useContext(AppContext);
-  const sortedArray = data.Search;
+  const { data, showFavs } = useContext(AppContext);
+  let sortedArray = [];
+
+  const favourites = useStoreState(state => state.favourites)
+  if (showFavs) {
+    sortedArray = favourites
+  } else {
+    sortedArray = data.Search
+  }
+
   return (
     <>
       <Table striped hover size='sm'>
@@ -34,7 +43,7 @@ const ListTable = ({ headings, setShowDetails }) => {
                 key={movie.imdbID}
                 role='button'
                 tabIndex={0}
-                onClick={() => setShowDetails(movie.imdbID)}
+                onClick={() => setShowDetails(movie)}
               >
                 <Td style={{ textAlign: 'center' }}>
                   <img

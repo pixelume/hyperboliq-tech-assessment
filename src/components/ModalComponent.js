@@ -4,11 +4,29 @@ import Button from 'react-bootstrap/Button'
 import MovieDetail from '../components/MovieDetail';
 // import movieData from '../fakeData/movieDetails.json';
 import Skeleton from 'react-loading-skeleton';
+import { useStoreActions, useStoreState } from 'easy-peasy';
+import { MovieDetailSkeleton } from './Skeletons';
 
-const ModalComponent = ({imdbID, closeHandler}) => {
+const ModalComponent = ({movieObj, closeHandler}) => {
   const [data, setData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [loading, setLoading] = useState(false);
+  // const [addedToFav, setAddedToFav] = useState(false)
+  const favourites = useStoreState((state) => state.favourites);
+  const setFavourites = useStoreActions((actions) => actions.setFavourites)
+  const removeFavourites = useStoreActions((actions) => actions.removeFavourites)
+  const {imdbID} = movieObj
+  const isInFavs = () => {
+    let isTrue = false
+    favourites.forEach((el) => {
+      if (el.imdbID === movieObj.imdbID) {
+        if (!isTrue) {
+          isTrue = true
+        }
+      }
+    })
+    return isTrue
+  }
 
   useEffect(() => {
     const fetchMovie = async () => {
@@ -45,20 +63,22 @@ const ModalComponent = ({imdbID, closeHandler}) => {
     fetchMovie();
   }, [imdbID])
   
-
   return (
       <Modal size='xl' fullscreen='sm-down' show onHide={closeHandler}>
         <Modal.Header closeButton>
           {data? <Modal.Title>{data.Title}</Modal.Title>: loading? <Skeleton />: 'N/A'}
         </Modal.Header>
-        <Modal.Body>{data? <MovieDetail movieData={data}/>: (loading? <Skeleton/>: 'Error')}</Modal.Body>
+        <Modal.Body>{data? <MovieDetail movieData={data}/>: (loading? <MovieDetailSkeleton/>: 'Error')}</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={closeHandler}>
             Close
           </Button>
-          <Button variant="primary" onClick={closeHandler}>
+          {!isInFavs() && <Button variant="primary" onClick={() => setFavourites(movieObj)}>
             Add to Favourites
-          </Button>
+          </Button>}
+          {isInFavs() && <Button variant="danger" onClick={() => removeFavourites(movieObj)}>
+            Remove from Favourites
+          </Button>}
         </Modal.Footer>
       </Modal>
   );
