@@ -1,25 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import styled from 'styled-components/macro';
 import GlobalStyle from './styles/GlobalStyle';
 import SearchBox from './components/SearchBox';
 import Skeleton from 'react-loading-skeleton';
 import Alert from 'react-bootstrap/Alert';
-import ListTable from './components/ListTable';
+import {
+  ColStyled,
+  ContainerStyled,
+  RowStyled,
+} from './styles/StyledComponents';
+import DisplayResults from './components/DisplayResults';
 
-const RowStyled = styled(Row)`
-  /* background-color: whitesmoke; */
-`;
-const ContainerStyled = styled(Container)`
-  margin: auto;
-`;
-const ColStyled = styled(Col)`
-  /* border: 1px solid black; */
-  margin: auto;
-`;
+export const AppContext = React.createContext();
 
 const App = () => {
   const [searchString, setSearchString] = useState('');
@@ -27,9 +19,16 @@ const App = () => {
   const [fetchError, setFetchError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const contextObj = {
+    searchString,
+    data,
+    fetchError,
+    loading,
+    setSearchString,
+    setData,
+    setFetchError,
+    setLoading,
+  };
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -72,58 +71,36 @@ const App = () => {
     } finally {
       setLoading(false);
     }
-
-    // fetch(
-    //   `https://movie-database-imdb-alternative.p.rapidapi.com/?${params.toString()}`,
-    //   {
-    //     method: 'GET',
-    //     headers: {
-    //       'x-rapidapi-key':
-    //         process.env.REACT_APP_IMDBAPI,
-    //       'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com',
-    //     },
-    //   }
-    // )
-    //   .then((response) => {
-    //     response.json()
-    //     .then(data => console.log(data))
-    //   })
-    //   .catch((err) => {
-    //     console.error(err);
-    //   });
   };
 
   return (
-    <>
+    <AppContext.Provider value={contextObj}>
       <GlobalStyle />
       <ContainerStyled fluid>
-        <RowStyled>
-          {!data && !loading && (
-            <ColStyled md={4}>
-              <SearchBox
-                {...{
-                  submitHandler,
-                  value: searchString,
-                  inputHandler: (e) => setSearchString(e.target.value),
-                }}
-              />
-            </ColStyled>
-          )}
-          {loading && <Skeleton count={10} />}
-          {data && data.Response === 'False' && (
-            <Alert variant='danger'>{data.Error}</Alert>
-          )}
-          {data && data.Response === 'True' && (
+        {!data && !loading && (
+          <SearchBox
+            {...{
+              submitHandler,
+              value: searchString,
+              inputHandler: (e) => setSearchString(e.target.value),
+            }}
+          />
+        )}
+        {loading && (
+          <RowStyled>
             <ColStyled className='py-2' md={10}>
-              <ListTable
-                headings={['Poster', 'Title', 'Type', 'Year']}
-                sortedArray={data.Search}
-              />
+              <Skeleton count={10} />
             </ColStyled>
-          )}
-        </RowStyled>
+          </RowStyled>
+        )}
+        {data && data.Response === 'False' && (
+          <RowStyled style={{margin: 'auto'}}>
+            <Alert variant='danger' dismissible onClose={() => setData(false)}>{data.Error}</Alert>
+          </RowStyled>
+        )}
+        {data && data.Response === 'True' && <DisplayResults />}
       </ContainerStyled>
-    </>
+    </AppContext.Provider>
   );
 };
 

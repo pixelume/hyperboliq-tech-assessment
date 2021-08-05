@@ -1,29 +1,24 @@
-import React from 'react'
-import Table from 'react-bootstrap/Table'
-import styled from 'styled-components'
-
-// import {
-//   tbody,
-//   TableContainer,
-//   Table,
-//   thead,
-//   tr,
-//   th,
-//   td
-// } from '../styles/TableStyles'
+import React, { useContext } from 'react';
+import Table from 'react-bootstrap/Table';
+import styled from 'styled-components';
+import imagePlaceHolder from '../images/movie_poster_placeholder.29ca1c87.svg';
+import { AppContext } from '../App';
 
 const Td = styled.td`
   vertical-align: middle;
-`
-
-const ListTable = ({ sortedArray, headings }) => {
+`;
+const ListTable = ({ headings, setShowDetails }) => {
+  const { data } = useContext(AppContext);
+  const sortedArray = data.Search;
   return (
-      <Table striped hover>
+    <>
+      <Table striped hover size='sm'>
         <thead>
           <tr>
             {headings.map((heading, idx) => {
               return (
-                <th style={{textAlign: idx === 0? 'center': 'left'}}
+                <th
+                  style={{ textAlign: idx === 0 ? 'center' : 'left' }}
                   key={`heading-${idx}-${heading}`}
                 >
                   {heading}
@@ -35,24 +30,36 @@ const ListTable = ({ sortedArray, headings }) => {
         <tbody>
           {sortedArray.map((movie, idx) => {
             return (
-              <tr key={`row-${idx}`}>
-                <Td style={{textAlign: 'center'}}>
-                  <img src={movie.Poster} alt={movie.Title} style={{width: 100, height:150}} />
+              <tr
+                key={movie.imdbID}
+                role='button'
+                tabIndex={0}
+                onClick={() => setShowDetails(movie.imdbID)}
+              >
+                <Td style={{ textAlign: 'center' }}>
+                  <img
+                    src={
+                      movie.Poster.slice(0, 4) === 'http'
+                        ? movie.Poster
+                        : imagePlaceHolder
+                    }
+                    alt={movie.Title}
+                    style={{
+                      width: 100,
+                      height: 150,
+                      boxShadow: '1px 1px 5px rgba(0, 0, 0, 0.1)',
+                    }}
+                  />
                 </Td>
-                <Td>
-                  {movie.Title}
-                </Td>
-                <Td>
-                  {movie.Type}
-                </Td>
-                <Td>
-                  {movie.Year}
-                </Td>
+                <Td>{movie.Title}</Td>
+                <Td>{movie.Type}</Td>
+                <Td>{movie.Year}</Td>
               </tr>
             );
           })}
         </tbody>
       </Table>
+    </>
   );
 };
 
