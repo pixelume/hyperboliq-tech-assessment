@@ -114,10 +114,12 @@ const App = () => {
             <Alert variant='danger'>{data.Error}</Alert>
           )}
           {data && data.Response === 'True' && (
-            <ListTable
-              headings={['Poster', 'Title', 'Type', 'Year']}
-              sortedArray={data.Search}
-            />
+            <ColStyled className='py-2' md={10}>
+              <ListTable
+                headings={['Poster', 'Title', 'Type', 'Year']}
+                sortedArray={data.Search}
+              />
+            </ColStyled>
           )}
         </RowStyled>
       </ContainerStyled>

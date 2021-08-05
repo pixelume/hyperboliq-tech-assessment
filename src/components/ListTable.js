@@ -1,41 +1,43 @@
 import React from 'react'
-import {
-  Tbody,
-  TableContainer,
-  Table,
-  Thead,
-  Tr,
-  Th,
-  Td
-} from '../styles/TableStyles'
+import Table from 'react-bootstrap/Table'
+import styled from 'styled-components'
+
+// import {
+//   tbody,
+//   TableContainer,
+//   Table,
+//   thead,
+//   tr,
+//   th,
+//   td
+// } from '../styles/TableStyles'
+
+const Td = styled.td`
+  vertical-align: middle;
+`
 
 const ListTable = ({ sortedArray, headings }) => {
   return (
-    <TableContainer>
-      <Table>
-        <Thead>
-          <Tr>
+      <Table striped hover>
+        <thead>
+          <tr>
             {headings.map((heading, idx) => {
               return (
-                <Th
+                <th style={{textAlign: idx === 0? 'center': 'left'}}
                   key={`heading-${idx}-${heading}`}
                 >
                   {heading}
-                </Th>
+                </th>
               );
             })}
-          </Tr>
-        </Thead>
-        <Tbody>
+          </tr>
+        </thead>
+        <tbody>
           {sortedArray.map((movie, idx) => {
             return (
-              <Tr key={`row-${idx}`}>
-                <Td style={{ verticalAlign: 'middle' }}>
-                  <div style={{maxHeight: 250}}>
-                    <img src={movie.Poster} alt={movie.Title} style={{height:250, objectFit: 'contain'}} />
-                  </div>
-                </Td>
-                <Td style={{ verticalAlign: 'middle' }}>
+              <tr key={`row-${idx}`}>
+                <Td style={{textAlign: 'center'}}>
+                  <img src={movie.Poster} alt={movie.Title} style={{width: 100, height:150}} />
                 </Td>
                 <Td>
                   {movie.Title}
@@ -46,12 +48,11 @@ const ListTable = ({ sortedArray, headings }) => {
                 <Td>
                   {movie.Year}
                 </Td>
-              </Tr>
+              </tr>
             );
           })}
-        </Tbody>
+        </tbody>
       </Table>
-    </TableContainer>
   );
 };
 
