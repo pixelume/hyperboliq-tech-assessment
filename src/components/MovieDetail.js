@@ -1,7 +1,7 @@
 import React from 'react';
 import Col from 'react-bootstrap/Col';
 // import styled from 'styled-components/macro';
-import { RowStyled } from '../styles/StyledComponents';
+import Row from 'react-bootstrap/Row';
 import Table from 'react-bootstrap/Table';
 import styled from 'styled-components';
 
@@ -13,7 +13,7 @@ const MovieDetail = ({ movieData }) => {
   //Logic
 
   return (
-    <RowStyled>
+    <Row>
       <Col md={12} lg={4}>
         <img src={movieData.Poster} alt={movieData.Title} style={{ width: '100%' }} />
       </Col>
@@ -75,7 +75,7 @@ const MovieDetail = ({ movieData }) => {
         <h3>Plot:</h3>
         {movieData.Plot}
       </Col>
-    </RowStyled>
+    </Row>
   );
 };
 

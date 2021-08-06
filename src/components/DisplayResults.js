@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Col } from 'react-bootstrap';
-import { ColStyled, RowStyled } from '../styles/StyledComponents';
+import { ColStyled } from '../styles/StyledComponents';
+import Row from 'react-bootstrap/Row';
 import Form from 'react-bootstrap/Form';
 import CardView from './CardView';
 import ListTable from './ListTable';
@@ -15,7 +16,7 @@ const DisplayResults = () => {
 
   return (
     <>
-      <RowStyled>
+      <Row>
         <Col md={4} style={{ margin: 'auto 0px auto auto' }}>
           <Form>
             <Form.Check
@@ -27,9 +28,9 @@ const DisplayResults = () => {
             />
           </Form>
         </Col>
-      </RowStyled>
+      </Row>
       {cardView ? (
-        <RowStyled>
+        <Row>
           <ColStyled
             md={10}
             style={{
@@ -42,16 +43,16 @@ const DisplayResults = () => {
               setShowDetails={setShowDetails}
             />
           </ColStyled>
-        </RowStyled>
+        </Row>
       ) : (
-        <RowStyled>
+        <Row>
           <ColStyled className='py-2' md={10}>
             <ListTable
               headings={['Poster', 'Title', 'Type', 'Year']}
               setShowDetails={setShowDetails}
             />
           </ColStyled>
-        </RowStyled>
+        </Row>
       )}
       {showDetails && <ModalComponent movieObj={showDetails} setShowDetails={setShowDetails} closeHandler={() => setShowDetails(false)}/>}
     </>

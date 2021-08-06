@@ -3,10 +3,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import GlobalStyle from './styles/GlobalStyle';
 import SearchBox from './components/SearchBox';
 import Alert from 'react-bootstrap/Alert';
-import {
-  ContainerStyled,
-  RowStyled,
-} from './styles/StyledComponents';
+import { ContainerStyled } from './styles/StyledComponents';
+import Row from 'react-bootstrap/Row';
 import DisplayResults from './components/DisplayResults';
 import { ListSkeleton } from './components/Skeletons';
 
@@ -17,7 +15,7 @@ const App = () => {
   const [data, setData] = useState(false);
   const [fetchError, setFetchError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showFavs, setShowFavs] = useState(false)
+  const [showFavs, setShowFavs] = useState(false);
 
   const contextObj = {
     searchString,
@@ -43,7 +41,7 @@ const App = () => {
       setData(false);
     }
     if (showFavs) {
-      setShowFavs(false)
+      setShowFavs(false);
     }
     console.log('Form Submitted');
     const params = new URLSearchParams({
@@ -74,7 +72,7 @@ const App = () => {
       console.error(error);
     } finally {
       setLoading(false);
-      setSearchString('')
+      setSearchString('');
     }
   };
 
@@ -82,23 +80,21 @@ const App = () => {
     <AppContext.Provider value={contextObj}>
       <GlobalStyle />
       <ContainerStyled fluid>
-        {!loading && (
-          <SearchBox
-            {...{
-              submitHandler,
-              value: searchString,
-              inputHandler: (e) => setSearchString(e.target.value),
-              favClickHandler: () => setShowFavs(true)
-            }}
-          />
-        )}
-        {loading && (
-          <ListSkeleton/>
-        )}
+        <SearchBox
+          {...{
+            submitHandler,
+            value: searchString,
+            inputHandler: (e) => setSearchString(e.target.value),
+            favClickHandler: () => setShowFavs(true),
+          }}
+        />
+        {loading && <ListSkeleton />}
         {data && data.Response === 'False' && (
-          <RowStyled style={{margin: 'auto'}}>
-            <Alert variant='danger' dismissible onClose={() => setData(false)}>{data.Error}</Alert>
-          </RowStyled>
+          <Row style={{ margin: 'auto' }}>
+            <Alert variant='danger' dismissible onClose={() => setData(false)}>
+              {data.Error}
+            </Alert>
+          </Row>
         )}
         {((data && data.Response === 'True') || showFavs) && <DisplayResults />}
       </ContainerStyled>
