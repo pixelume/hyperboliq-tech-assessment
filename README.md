@@ -1,7 +1,7 @@
 
 ## Instructions
 
-The SPA was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Download and unzip the archived file or clone the [Github repository](https://github.com/pixelume/offerzen-tech-challenge). After unzipping or cloning, run npm install to install the dependencies. I did deploy the finished SPA [here on Netlify](https://zen-panini-eb6e2b.netlify.app/) if you want to demo it.
+The SPA was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Download and unzip the archived file or clone the [Github repository](https://github.com/pixelume/hyperboliq-tech-assessment). After unzipping or cloning, run npm install to install the dependencies. I did deploy the finished SPA [here on Netlify](https://priceless-knuth-b0786b.netlify.app/) if you want to demo it.
 
 ## Notes and thoughts on the assignment
 
