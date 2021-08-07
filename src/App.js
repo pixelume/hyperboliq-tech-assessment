@@ -7,15 +7,15 @@ import { ContainerStyled } from './styles/StyledComponents';
 import Row from 'react-bootstrap/Row';
 import DisplayResults from './components/DisplayResults';
 import { ListSkeleton } from './components/Skeletons';
+import useFetch from './hooks/useFetch';
 
 export const AppContext = React.createContext();
 
 const App = () => {
   const [searchString, setSearchString] = useState('');
-  const [data, setData] = useState(false);
-  const [fetchError, setFetchError] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState('');
   const [showFavs, setShowFavs] = useState(false);
+  const [data, fetchError, loading] = useFetch(query)
 
   const contextObj = {
     searchString,
@@ -24,56 +24,21 @@ const App = () => {
     loading,
     showFavs,
     setSearchString,
-    setData,
-    setFetchError,
-    setLoading,
   };
 
-  const submitHandler = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (fetchError) {
-      setFetchError(false);
-    }
-    if (!loading) {
-      setLoading(true);
-    }
-    if (data) {
-      setData(false);
-    }
     if (showFavs) {
       setShowFavs(false);
     }
-    console.log('Form Submitted');
-    const params = new URLSearchParams({
-      s: searchString,
-      r: 'json',
-      page: 1,
-    });
-    try {
-      const response = await fetch(
-        `https://movie-database-imdb-alternative.p.rapidapi.com/?${params.toString()}`,
-        {
-          method: 'GET',
-          headers: {
-            'x-rapidapi-key': process.env.REACT_APP_IMDBAPI,
-            'x-rapidapi-host': 'movie-database-imdb-alternative.p.rapidapi.com',
-          },
-        }
-      );
-      if (response.ok) {
-        const json = await response.json();
-        setData(json);
-      } else {
-        setFetchError(
-          `${await response.text()} (Status code ${response.status})`
-        );
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      setSearchString('');
-    }
+    setQuery(
+      new URLSearchParams({
+        s: searchString,
+        r: 'json',
+        page: 1,
+      }).toString()
+    );
+    setSearchString('')
   };
 
   return (
@@ -82,7 +47,7 @@ const App = () => {
       <ContainerStyled fluid>
         <SearchBox
           {...{
-            submitHandler,
+            submitHandler: handleSubmit,
             value: searchString,
             inputHandler: (e) => setSearchString(e.target.value),
             favClickHandler: () => setShowFavs(true),
@@ -91,7 +56,7 @@ const App = () => {
         {loading && <ListSkeleton />}
         {data && data.Response === 'False' && (
           <Row style={{ margin: 'auto' }}>
-            <Alert variant='danger' dismissible onClose={() => setData(false)}>
+            <Alert variant='danger'>
               {data.Error}
             </Alert>
           </Row>
