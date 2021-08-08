@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import GlobalStyle from './styles/GlobalStyle';
 import SearchBox from './components/SearchBox';
-import Alert from 'react-bootstrap/Alert';
+// import Alert from 'react-bootstrap/Alert';
 import { ContainerStyled } from './styles/StyledComponents';
-import Row from 'react-bootstrap/Row';
+// import Row from 'react-bootstrap/Row';
 import DisplayResults from './components/DisplayResults';
-import { ListSkeleton } from './components/Skeletons';
+// import { CardViewSkeleton, ListSkeleton } from './components/Skeletons';
 import useFetch from './hooks/useFetch';
+// import { useStoreState } from 'easy-peasy';
+// import CardView from './components/CardView';
 
 export const AppContext = React.createContext();
 
@@ -16,6 +18,7 @@ const App = () => {
   const [query, setQuery] = useState('');
   const [showFavs, setShowFavs] = useState(false);
   const [data, fetchError, loading] = useFetch(query)
+  // const cardView = useStoreState((state) => state.cardView);
 
   const contextObj = {
     searchString,
@@ -50,21 +53,25 @@ const App = () => {
             submitHandler: handleSubmit,
             value: searchString,
             inputHandler: (e) => setSearchString(e.target.value),
-            favClickHandler: () => setShowFavs(true),
+            showFavs,
+            favClickHandler: () => setShowFavs((showFavs) => !showFavs),
           }}
         />
-        {loading && <ListSkeleton />}
-        {data && data.Response === 'False' && (
-          <Row style={{ margin: 'auto' }}>
-            <Alert variant='danger'>
-              {data.Error}
-            </Alert>
-          </Row>
-        )}
-        {((data && data.Response === 'True') || showFavs) && <DisplayResults />}
+        <DisplayResults />
       </ContainerStyled>
     </AppContext.Provider>
   );
 };
 
 export default App;
+
+// {(loading && cardView) && <><CardViewSkeleton/></>}
+//         {loading && (!cardView) && <ListSkeleton/>}
+//         {data && data.Response === 'False' && (
+//           <Row style={{ margin: 'auto' }}>
+//             <Alert variant='danger'>
+//               {data.Error}
+//             </Alert>
+//           </Row>
+//         )}
+//         {((data && data.Response === 'True') || showFavs) && <DisplayResults />}

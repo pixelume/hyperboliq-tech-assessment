@@ -6,8 +6,9 @@ import { BsSearch } from 'react-icons/bs';
 import { ColStyled } from '../styles/StyledComponents';
 import Row from 'react-bootstrap/Row';
 import Button from 'react-bootstrap/Button';
+import {BiArrowBack} from 'react-icons/bi';
 
-const SearchBox = ({ inputHandler, submitHandler, value, favClickHandler }) => {
+const SearchBox = ({ inputHandler, submitHandler, value, showFavs, favClickHandler }) => {
   return (
     <Row className='my-4' style={{backgroundColor: 'whitesmoke', paddingTop: 10}}>
       <ColStyled className='mb-2' fluid='sm' md={3}>
@@ -34,7 +35,7 @@ const SearchBox = ({ inputHandler, submitHandler, value, favClickHandler }) => {
         </Form>
       </ColStyled>
       <ColStyled className='text-end' fluid='sm' md={5} lg={4}>
-        <Button variant='outline-primary' onClick={favClickHandler}>My Favourites</Button>
+        <Button variant={showFavs? 'outline-success': 'outline-primary'} onClick={favClickHandler}>{showFavs? (<><BiArrowBack/>{` Last Search`}</>): 'My Favourites'}</Button>
       </ColStyled>
     </Row>
   );
